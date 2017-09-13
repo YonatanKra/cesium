@@ -90,12 +90,21 @@ define([
         this._distanceDisplayConditionSubscription = undefined;
         this._disableDepthTestDistance = undefined;
         this._disableDepthTestDistanceSubscription = undefined;
+        this._updateOnce = 0;
         this._definitionChanged = new Event();
 
         this.merge(defaultValue(options, defaultValue.EMPTY_OBJECT));
     }
 
     defineProperties(BillboardGraphics.prototype, {
+        updateOnce: {
+            get: function() {
+                return this._updateOnce;
+            },
+            set: function(value) {
+                this._updateOnce = value;
+            }
+        },
         /**
          * Gets the event that is raised whenever a property or sub-property is changed or modified.
          * @memberof BillboardGraphics.prototype
