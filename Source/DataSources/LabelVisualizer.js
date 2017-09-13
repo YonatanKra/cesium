@@ -117,6 +117,13 @@ define([
             var item = items[i];
             var entity = item.entity;
             var labelGraphics = entity._label;
+            if (labelGraphics.updateOnce === 2) {
+                continue;
+            }
+
+            if (labelGraphics.updateOnce === 1) {
+                labelGraphics.updateOnce = 2;
+            }
             var text;
             var label = item.label;
             var show = entity.isShowing && entity.isAvailable(time) && Property.getValueOrDefault(labelGraphics._show, time, true);

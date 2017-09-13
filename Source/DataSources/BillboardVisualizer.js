@@ -107,6 +107,13 @@ define([
             var item = items[i];
             var entity = item.entity;
             var billboardGraphics = entity._billboard;
+            if (billboardGraphics.updateOnce === 2) {
+                continue;
+            }
+
+            if (billboardGraphics.updateOnce === 1) {
+                billboardGraphics.updateOnce = 2;
+            }
             var textureValue;
             var billboard = item.billboard;
             var show = entity.isShowing && entity.isAvailable(time) && Property.getValueOrDefault(billboardGraphics._show, time, true);
