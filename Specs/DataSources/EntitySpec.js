@@ -78,6 +78,7 @@ defineSuite([
         expect(entity.viewFrom).toBeUndefined();
         expect(entity.wall).toBeUndefined();
         expect(entity.entityCollection).toBeUndefined();
+        expect(entity.updateOnce).toEqual(0);
 
         var options = {
             id : 'someId',

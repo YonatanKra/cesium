@@ -115,6 +115,8 @@ define([
      * @param {PropertyBag} [options.properties] Arbitrary properties to associate with this entity.
      * @param {PolylineVolumeGraphics} [options.polylineVolume] A polylineVolume to associate with this entity.
      * @param {RectangleGraphics} [options.rectangle] A rectangle to associate with this entity.
+     * @param {Number} [options.updateOnce] A flag to notify if we should update the entity's graphics only in the next
+     * rendering cycle.
      * @param {WallGraphics} [options.wall] A wall to associate with this entity.
      *
      * @see {@link http://cesiumjs.org/2015/02/02/Visualizing-Spatial-Data/|Visualizing Spatial Data}
@@ -177,6 +179,7 @@ define([
         this._viewFromSubscription = undefined;
         this._wall = undefined;
         this._wallSubscription = undefined;
+        this._updateOnce = 0;
         this._children = [];
 
         /**
@@ -204,6 +207,25 @@ define([
     }
 
     defineProperties(Entity.prototype, {
+        /**
+         * Notifies the Entity's Graphics if they should update in the next rendering cycle.  Value of one means yes,
+         * value of 2 means no, value of 0 means update with every rendering cycle (Cesium's default)
+         * @memberof Entity.prototype
+         * @type {Number}
+         */
+        updateOnce : {
+            get : function() {
+                return this._updateOnce;
+            },
+            set : function(value) {
+                // do it only if value changed
+                if (value !== this._updateOnce) {
+                    // TODO::should we optimize other graphics? Maybe according to propertyNames?
+                    if (this.billboard) {this.billboard.updateOnce = 1;}
+                    if (this.label) {this.label.updateOnce = 1;}
+                }
+            }
+        },
         /**
          * The availability, if any, associated with this object.
          * If availability is undefined, it is assumed that this object's
