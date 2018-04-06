@@ -93,12 +93,21 @@ define([
         this._distanceDisplayConditionSubscription = undefined;
         this._disableDepthTestDistance = undefined;
         this._disableDepthTestDistanceSubscription = undefined;
+        this._forceUpdate = false;
         this._definitionChanged = new Event();
 
         this.merge(defaultValue(options, defaultValue.EMPTY_OBJECT));
     }
 
     defineProperties(LabelGraphics.prototype, {
+        forceUpdate: {
+            get: function() {
+                return this._forceUpdate;
+            },
+            set: function(value) {
+                this._forceUpdate = Boolean(value);
+            }
+        },
         /**
          * Gets the event that is raised whenever a property or sub-property is changed or modified.
          * @memberof LabelGraphics.prototype
