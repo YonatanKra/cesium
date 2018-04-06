@@ -115,6 +115,10 @@ define([
      * @param {PropertyBag} [options.properties] Arbitrary properties to associate with this entity.
      * @param {PolylineVolumeGraphics} [options.polylineVolume] A polylineVolume to associate with this entity.
      * @param {RectangleGraphics} [options.rectangle] A rectangle to associate with this entity.
+     * @param {Boolean} [options.manualUpdate] A flag to notify if we should update the entity's graphics according
+     * manually (with forceUpdate)
+     * @param {Boolean} [options.forceUpdate] A flag to notify if we should update the entity's graphics only in the next
+     * rendering cycle (if manualUpdate is true).
      * @param {WallGraphics} [options.wall] A wall to associate with this entity.
      *
      * @see {@link http://cesiumjs.org/2015/02/02/Visualizing-Spatial-Data/|Visualizing Spatial Data}
@@ -177,6 +181,8 @@ define([
         this._viewFromSubscription = undefined;
         this._wall = undefined;
         this._wallSubscription = undefined;
+        this._manualUpdate = false;
+        this._forceUpdate = false;
         this._children = [];
 
         /**
@@ -204,6 +210,41 @@ define([
     }
 
     defineProperties(Entity.prototype, {
+        /**
+         * Notifies the Entity's Graphics if they should update in the next rendering cycle.
+         * @memberof Entity.prototype
+         * @type {Number}
+         */
+        manualUpdate: {
+            get: function() {
+                return this._manualUpdate;
+            },
+            set: function(value) {
+                this._manualUpdate = Boolean(value);
+            }
+        },
+        /**
+          * Notifies the Entity's Graphics if they should update in the next rendering cycle.
+          * @memberof Entity.prototype
+          * @type {Number}
+          */
+        forceUpdate : {
+            get : function() {
+                return this._forceUpdate;
+            },
+            set : function(value) {
+                // do it only if value changed
+                if (value !== this._forceUpdate) {
+                    // TODO::should we optimize other graphics? Maybe according to propertyNames?
+                    if (this.billboard) {
+                        this.billboard.forceUpdate = 1;
+                    }
+                    if (this.label) {
+                        this.label.forceUpdate = 1;
+                    }
+                }
+            }
+        },
         /**
          * The availability, if any, associated with this object.
          * If availability is undefined, it is assumed that this object's
